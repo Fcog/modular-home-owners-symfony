@@ -10,6 +10,7 @@
         "doctrine/doctrine-bundle": "^2.6",
         "doctrine/doctrine-migrations-bundle": "^3.2",
         "doctrine/orm": "^2.12",
+        "gedmo/doctrine-extensions": "*",
         "symfony/console": "6.0.*",
         "symfony/dotenv": "6.0.*",
         "symfony/flex": "^2",
@@ -70,6 +71,7 @@
         }
     },
     "require-dev": {
+        "dama/doctrine-test-bundle": "^7.0",
         "symfony/maker-bundle": "^1.41"
     }
 }

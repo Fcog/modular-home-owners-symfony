@@ -14,6 +14,9 @@ class Home
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
+    private $name;
+
+    #[ORM\Column(type: 'string', length: 255)]
     private $code;
 
     #[ORM\Column(type: 'boolean')]
@@ -25,7 +28,7 @@ class Home
     #[ORM\Column(type: 'integer')]
     private $bedrooms;
 
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: 'float')]
     private $baths;
 
     #[ORM\Column(type: 'float')]
@@ -46,9 +49,29 @@ class Home
     #[ORM\Column(type: 'text', nullable: true)]
     private $info;
 
+    #[ORM\ManyToOne(targetEntity: HomeStyle::class, inversedBy: 'homes')]
+    #[ORM\JoinColumn(nullable: false)]
+    private $homeStyle;
+
+    #[ORM\ManyToOne(targetEntity: Partner::class, inversedBy: 'homes')]
+    #[ORM\JoinColumn(nullable: false)]
+    private $partner;
+
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
     }
 
     public function getCode(): ?string
@@ -179,6 +202,30 @@ class Home
     public function setInfo(?string $info): self
     {
         $this->info = $info;
+
+        return $this;
+    }
+
+    public function getHomeStyle(): ?HomeStyle
+    {
+        return $this->homeStyle;
+    }
+
+    public function setHomeStyle(?HomeStyle $homeStyle): self
+    {
+        $this->homeStyle = $homeStyle;
+
+        return $this;
+    }
+
+    public function getPartner(): ?Partner
+    {
+        return $this->partner;
+    }
+
+    public function setPartner(?Partner $partner): self
+    {
+        $this->partner = $partner;
 
         return $this;
     }
