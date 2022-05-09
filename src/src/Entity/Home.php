@@ -2,10 +2,27 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\NumericFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Serializer\Filter\PropertyFilter;
 use App\Repository\HomeRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: HomeRepository::class)]
+#[ApiResource(
+    attributes: [
+        'pagination_items_per_page' => 10,
+    ]
+)]
+#[ApiFilter(BooleanFilter::class, properties: ['isVerified'])]
+#[ApiFilter(SearchFilter::class, properties: ['name' => 'partial'])]
+#[ApiFilter(NumericFilter::class, properties: ['sqft', 'baths', 'stories', 'bedrooms'])]
+#[ApiFilter(RangeFilter::class, properties: ['cost'])]
+#[ApiFilter(PropertyFilter::class)]
 class Home
 {
     #[ORM\Id]
@@ -20,7 +37,7 @@ class Home
     private $code;
 
     #[ORM\Column(type: 'boolean')]
-    private $verified;
+    private $isVerified;
 
     #[ORM\Column(type: 'integer')]
     private $sqft;
@@ -38,13 +55,13 @@ class Home
     private $cost;
 
     #[ORM\Column(type: 'integer')]
-    private $estimated_cost;
+    private $estimatedCost;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $link;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private $floorplans_link;
+    private $floorplansLink;
 
     #[ORM\Column(type: 'text', nullable: true)]
     private $info;
@@ -86,14 +103,14 @@ class Home
         return $this;
     }
 
-    public function getVerified(): ?bool
+    public function getIsVerified(): ?bool
     {
-        return $this->verified;
+        return $this->isVerified;
     }
 
-    public function setVerified(bool $verified): self
+    public function setIsVerified(bool $isVerified): self
     {
-        $this->verified = $verified;
+        $this->isVerified = $isVerified;
 
         return $this;
     }
@@ -160,12 +177,12 @@ class Home
 
     public function getEstimatedCost(): ?int
     {
-        return $this->estimated_cost;
+        return $this->estimatedCost;
     }
 
-    public function setEstimatedCost(int $estimated_cost): self
+    public function setEstimatedCost(int $estimatedCost): self
     {
-        $this->estimated_cost = $estimated_cost;
+        $this->estimatedCost = $estimatedCost;
 
         return $this;
     }
@@ -184,12 +201,12 @@ class Home
 
     public function getFloorplansLink(): ?string
     {
-        return $this->floorplans_link;
+        return $this->floorplansLink;
     }
 
-    public function setFloorplansLink(?string $floorplans_link): self
+    public function setFloorplansLink(?string $floorplansLink): self
     {
-        $this->floorplans_link = $floorplans_link;
+        $this->floorplansLink = $floorplansLink;
 
         return $this;
     }
@@ -197,6 +214,15 @@ class Home
     public function getInfo(): ?string
     {
         return $this->info;
+    }
+
+    public function getShortInfo(): ?string
+    {
+        if (strlen($this->info) < 40) {
+            return $this->info;
+        }
+
+        return substr($this->info, 0, 40) . '...';
     }
 
     public function setInfo(?string $info): self

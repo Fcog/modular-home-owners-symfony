@@ -2,12 +2,15 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\PartnerRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 #[ORM\Entity(repositoryClass: PartnerRepository::class)]
+#[ApiResource()]
 class Partner
 {
     #[ORM\Id]
@@ -32,6 +35,7 @@ class Partner
     private $type;
 
     #[ORM\OneToMany(mappedBy: 'partner', targetEntity: Home::class)]
+    #[MaxDepth(1)]
     private $homes;
 
     public function __construct()
